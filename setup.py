@@ -15,8 +15,7 @@ requirements = []
 test_requirements = ['pytest']
 
 setup(
-    author="Lucas Rangel Cezimbra",
-    author_email='lucas@cezimbra.tec.br',
+    author="HBN3tw0rk",
     python_requires='>=3.6',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
