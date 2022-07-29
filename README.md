@@ -36,7 +36,7 @@ git clone https://github.com/HBN3tw0rk/dcache
 cd dcache
 git checkout develop
 python -m venv .venv
-pip install -r requirements-dev.txt
+pip install -r requirements_dev.txt
 pre-commit install
 pytest
 ```
