@@ -1,126 +1,42 @@
 # dcache
 
-## Pitch (Portuguese)
-- Part 1: https://www.loom.com/share/ee553d6915ca4dc5ba8609d48b59bd55
-- Part 2: https://www.loom.com/share/50cb4ff9560943879d78864f5fa1b4e0
+
+[![PyPI](https://img.shields.io/pypi/v/dcache.svg)](https://pypi.python.org/pypi/dcache)
+
+[![Coverage Status](https://coveralls.io/repos/github/HBN3tw0rk/dcache/badge.svg?branch=master)](https://coveralls.io/github/HBN3tw0rk/dcache?branch=master)
+
+[![Documentation Status](https://readthedocs.org/projects/dcache/badge/?version=latest)](https://dcache.readthedocs.io/en/latest/?version=latest)
 
 
-## What is
-- distributed cache for humans
-- simple API like `lru_cache`
-- multiple backends
-- easy to switch the backend
-- good documentation
+
+Distributed Cache for Humans
 
 
-## API
+- Documentation: https://dcache.readthedocs.io.
 
-### dcache
 
-```python
-from dcache import dcache
+## Installation
 
-@dcache
-def slow_function(n):
-    return n ** 1000
-```
-
-### dcache vs redis
-
-```python
-import redis
-redis = redis.Redis(host='localhost', port=6379, db=0)
-
-def slow_function(n):
-    cached = redis.get(n)
-    if cached:
-        return cached
-    value = n ** 1000
-    redis.set(n, value)
-    return value
-
-def slow_function2(n):
-    cached = redis.get(n)
-    if cached:
-        return cached
-    value = n ** 1000
-    redis.set(n, value)
-    return value
-```
-
-```python
-from dcache import cache
-from dcache.backends import RedisBackend
-
-cache = dcache(RedisBackend(host='localhost', port=6379, db=0))
-
-@cache
-def slow_function(n):
-    return n ** 1000
-
-@cache
-def slow_function2(n):
-    return n ** 1000
-```
-
-### real example
-
-```python
-def process(id, input):
-    cache_path = get_content_cache_path(id, input)
-
-    if resource.file_exist(cache_path):
-        return resource.get_json(cache_path)
-
-    response = slow_function(id, input)
-	  resource.put_json(body=response, file_path=cache_path)
-    return response
-```
-
-```python
-from dcache import dcache
-from dcache.backends import S3Backend
-
-@dcache(S3Backend())
-def process(id, input):
-    return slow_function(id, input)
+```bash
+pip install dcache
 ```
 
 
-## Ideas
 
-- integration tests using containers
+## How to Use
 
-### multiple backends
 
-```python
+## Contributing
+Contributions are welcome, feel free to open an Issue or Pull Request.
 
-from dcache import dcache
-from dcache.backends import InMemoryBackend, RedisBackend
+Pull requests must be for the `develop` branch.
 
-@dcache(multiple=[
-    InMemoryBackend(),
-    RedisBackend(host='localhost', port=6379, db=0),
-])
-def slow_function(n):
-		return n ** 1000
+```bash
+git clone https://github.com/HBN3tw0rk/dcache
+cd dcache
+git checkout develop
+python -m venv .venv
+pip install -r requirements_dev.txt
+pre-commit install
+pytest
 ```
-
-1. search on the in-memory cache;
-2. if exists, return, if not, search on Redis;
-3. *if exists on Redis, save in memory and return;
-4. *if not, exists on Redis, run the `slow_function`, save on Redis, save in-memory and return;
-
-* doesn't run if already returned
-
-
-## MVP
-
-- in memory
-
-
-## Roadmap
-
-- backends: Redis, Memcached, Filesystem, database, S3, etc.
-- multiple backends
-- plugins
