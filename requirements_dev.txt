@@ -8,6 +8,6 @@ pytest==7.1.2
 pytest-cov==3.0.0
 pytest-mock==3.7.0
 Sphinx==1.8.5
-tox==3.14.0
+tox==3.25.1
 twine==1.14.0
 wheel==0.33.6
