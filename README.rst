@@ -170,8 +170,8 @@ multiple backends
 
 1. search on the in-memory cache;
 2. if exists, return, if not, search on Redis;
-3. *if exists on Redis, save in memory and return;
-4. *if not, exists on Redis, run the `slow_function`, save on Redis, save in-memory and return;
+3. * if exists on Redis, save in memory and return;
+4. * if not, exists on Redis, run the `slow_function`, save on Redis, save in-memory and return;
 
 * doesn't run if already returned
 
