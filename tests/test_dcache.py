@@ -1,4 +1,4 @@
-from uniitest.mock import MagicMock
+from unittest.mock import MagicMock
 
 from dcache import Dcache
 

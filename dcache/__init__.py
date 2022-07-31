@@ -1,12 +1,5 @@
+from dcache.backends import InMemory
 from dcache.exceptions import NotExistError
-
-
-class InMemoryBackend(dict):
-    def __getitem__(self, *args, **kwargs):
-        try:
-            return super().__getitem__(*args, **kwargs)
-        except KeyError as e:
-            raise NotExistError from e
 
 
 def make_hash(func, *args, **kwargs):
@@ -36,7 +29,7 @@ class Cached:
 
 class Dcache:
     def __init__(self, backend=None, make_key=make_hash):
-        self._backend = backend or InMemoryBackend()
+        self._backend = backend or InMemory()
         self._make_key = make_key
 
     def __call__(self, func):
