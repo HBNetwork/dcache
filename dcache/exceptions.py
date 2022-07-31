@@ -1,0 +1,2 @@
+class NotExistError(KeyError):
+    pass
