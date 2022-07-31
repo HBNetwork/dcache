@@ -4,6 +4,15 @@ from dcache.keys import dhash
 
 
 class Dcache:
+    """
+    :param backend: The backend used to cache, defaults to :class:`dcache.backends.InMemory`
+    :type backend: :class:`dcache.backends.Base`, optional
+
+    :param key: A function that will receive cached function, args and kwargs, and
+        should return a unique key that will be used to distinguish the cached results,
+        defaults to :func:`dcache.keys.dhash`
+    :type key: function, optional
+    """
     def __init__(self, backend=None, key=dhash):
         self._backend = backend or InMemory()
         self._key = key
