@@ -1,5 +1,13 @@
-"""Top-level package for dcache."""
+from dcache.dcache import Dcache
 
-__author__ = """Lucas Rangel Cezimbra"""
-__email__ = 'lucas@cezimbra.tec.br'
-__version__ = '0.0.1'
+cache = Dcache()
+"""
+Default in-memory cache
+
+>>> from dcache import cache
+...
+>>> @cache
+... def slow_function():
+...     ...
+...
+"""
