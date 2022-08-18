@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - target-branch: "develop"
+  - target-branch: "master"
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
