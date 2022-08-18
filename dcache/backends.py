@@ -49,19 +49,12 @@ class Base:
 
 class InMemory(dict, Base):
     """
-    InMemory backend uses a dict to save the cached values.
-
-    >>> from dcache.backends import InMemory as InMemoryBackend
-    ...
-    >>> backend = InMemoryBackend()
-    >>> backend['key'] = 'value'
-    >>> backend['key']
-    'value'
+    Backend that uses a Python dict to cache values.
     """
 
     def __getitem__(self, *args, **kwargs):
         """
-        Override `dict.__get__` to raise :class:`dcache.exceptions.NotExistError`
+        Override `dict.__getitem__` to raise :class:`dcache.exceptions.NotExistError`
         instead of the default KeyError.
 
         :raises NotExistError:
