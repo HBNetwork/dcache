@@ -58,6 +58,7 @@ class InMemory(dict, Base):
     >>> backend['key']
     'value'
     """
+
     def __getitem__(self, *args, **kwargs):
         """
         Override `dict.__get__` to raise :class:`dcache.exceptions.NotExistError`
