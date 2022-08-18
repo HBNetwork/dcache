@@ -3,7 +3,7 @@ Changelog
 =========
 
 
-(unreleased)
+0.0.2 (2022-08-18)
 ------------
 * Add InMemory backend
 
