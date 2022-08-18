@@ -13,6 +13,7 @@ class Dcache:
         defaults to :func:`dcache.keys.dhash`
     :type key: function, optional
     """
+
     def __init__(self, backend=None, key=dhash):
         self._backend = backend or InMemory()
         self._key = key
