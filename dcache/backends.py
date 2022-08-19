@@ -1,3 +1,8 @@
+import tempfile
+from json.decoder import JSONDecodeError
+from pathlib import Path
+
+from dcache import serializers
 from dcache.exceptions import NotExistError
 
 
@@ -49,19 +54,12 @@ class Base:
 
 class InMemory(dict, Base):
     """
-    InMemory backend uses a dict to save the cached values.
-
-    >>> from dcache.backends import InMemory as InMemoryBackend
-    ...
-    >>> backend = InMemoryBackend()
-    >>> backend['key'] = 'value'
-    >>> backend['key']
-    'value'
+    Backend that uses a Python dict to cache values.
     """
 
     def __getitem__(self, *args, **kwargs):
         """
-        Override `dict.__get__` to raise :class:`dcache.exceptions.NotExistError`
+        Override `dict.__getitem__` to raise :class:`dcache.exceptions.NotExistError`
         instead of the default KeyError.
 
         :raises NotExistError:
@@ -73,3 +71,30 @@ class InMemory(dict, Base):
             return super().__getitem__(*args, **kwargs)
         except KeyError as e:
             raise NotExistError from e
+
+
+class File(Base):
+    def __init__(self, filepath=None, serializer=None):
+        self.memory = InMemory()
+        self._filepath = filepath
+        self.serializer = serializer or serializers.Json()
+
+    @property
+    def filepath(self):
+        if not self._filepath:
+            _, self._filepath = tempfile.mkstemp()
+        return Path(self._filepath)
+
+    def __getitem__(self, key):
+        try:
+            with open(self.filepath, "r") as f:
+                data = self.serializer.load(f)
+            return data[key]
+        except (FileNotFoundError, JSONDecodeError, KeyError) as e:
+            raise NotExistError from e
+
+    def __setitem__(self, key, value):
+        self.memory[key] = value
+
+        with open(self.filepath, "w") as f:
+            self.serializer.dump(self.memory, f)
