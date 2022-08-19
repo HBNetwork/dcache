@@ -1,3 +1,8 @@
+import json
+import tempfile
+from json.decoder import JSONDecodeError
+from pathlib import Path
+
 from dcache.exceptions import NotExistError
 
 
@@ -66,3 +71,29 @@ class InMemory(dict, Base):
             return super().__getitem__(*args, **kwargs)
         except KeyError as e:
             raise NotExistError from e
+
+
+class File(Base):
+    def __init__(self, filepath=None):
+        self.memory = InMemory()
+        self._filepath = filepath
+
+    @property
+    def filepath(self):
+        if not self._filepath:
+            _, self._filepath = tempfile.mkstemp()
+        return Path(self._filepath)
+
+    def __getitem__(self, key):
+        try:
+            with open(self.filepath, "r") as f:
+                data = json.load(f)
+            return data[key]
+        except (FileNotFoundError, JSONDecodeError, KeyError) as e:
+            raise NotExistError from e
+
+    def __setitem__(self, key, value):
+        self.memory[key] = value
+
+        with open(self.filepath, "w") as f:
+            json.dump(self.memory, f)
