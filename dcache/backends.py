@@ -1,8 +1,8 @@
-import json
 import tempfile
 from json.decoder import JSONDecodeError
 from pathlib import Path
 
+from dcache import serializers
 from dcache.exceptions import NotExistError
 
 
@@ -74,9 +74,10 @@ class InMemory(dict, Base):
 
 
 class File(Base):
-    def __init__(self, filepath=None):
+    def __init__(self, filepath=None, serializer=None):
         self.memory = InMemory()
         self._filepath = filepath
+        self.serializer = serializer or serializers.Json()
 
     @property
     def filepath(self):
@@ -87,7 +88,7 @@ class File(Base):
     def __getitem__(self, key):
         try:
             with open(self.filepath, "r") as f:
-                data = json.load(f)
+                data = self.serializer.load(f)
             return data[key]
         except (FileNotFoundError, JSONDecodeError, KeyError) as e:
             raise NotExistError from e
@@ -96,4 +97,4 @@ class File(Base):
         self.memory[key] = value
 
         with open(self.filepath, "w") as f:
-            json.dump(self.memory, f)
+            self.serializer.dump(self.memory, f)

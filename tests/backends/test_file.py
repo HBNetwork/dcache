@@ -1,4 +1,5 @@
 import json
+import pickle
 import tempfile
 from uuid import uuid4
 
@@ -60,3 +61,15 @@ def test_custom_filepath():
         data = json.load(f)
 
         assert data == {key: value}
+
+
+def test_serializer():
+    backend = File(serializer=pickle)
+    key, value = str(uuid4()), str(uuid4())
+
+    backend[key] = value
+
+    with open(backend.filepath) as f:
+        data = pickle.load(f)
+
+    assert data == {key: value}
